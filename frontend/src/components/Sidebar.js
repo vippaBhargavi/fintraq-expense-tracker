@@ -9,7 +9,98 @@ const NAV = [
 
 export default function Sidebar({ activePage, setActivePage }) {
   const { user, logout } = useAuth();
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
 
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Mobile layout
+  if (isMobile) {
+    return (
+      <>
+        {/* Top header */}
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0,
+          height: 56,
+          background: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 16px',
+          zIndex: 100
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{
+              width: 28, height: 28,
+              background: 'linear-gradient(135deg, #10b981, #059669)',
+              borderRadius: 7,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 14, fontWeight: 700, color: '#000'
+            }}>₿</div>
+            <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>Fintraq</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 28, height: 28,
+              background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
+              borderRadius: '50%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12, fontWeight: 600, color: '#fff'
+            }}>
+              {user?.name?.charAt(0).toUpperCase()}
+            </div>
+            <button onClick={logout} style={{
+              background: 'none', border: 'none',
+              color: 'var(--text-muted)', cursor: 'pointer',
+              fontSize: 16, padding: '4px'
+            }}>→</button>
+          </div>
+        </div>
+
+        {/* Bottom nav */}
+        <nav style={{
+          position: 'fixed', bottom: 0, left: 0, right: 0,
+          height: 60,
+          background: 'var(--bg-secondary)',
+          borderTop: '1px solid var(--border)',
+          display: 'flex', alignItems: 'center',
+          zIndex: 100
+        }}>
+          {NAV.map(item => (
+            <button
+              key={item.id}
+              onClick={() => setActivePage(item.id)}
+              style={{
+                flex: 1, display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center', gap: 3,
+                border: 'none', background: 'transparent',
+                color: activePage === item.id ? 'var(--accent)' : 'var(--text-muted)',
+                cursor: 'pointer', padding: '8px 0',
+                fontFamily: 'Inter, sans-serif',
+                position: 'relative'
+              }}
+            >
+              <span style={{ fontSize: 20 }}>{item.icon}</span>
+              <span style={{ fontSize: 10, fontWeight: activePage === item.id ? 600 : 400 }}>
+                {item.label}
+              </span>
+              {activePage === item.id && (
+                <div style={{
+                  position: 'absolute', top: 0,
+                  width: 32, height: 2,
+                  background: 'var(--accent)', borderRadius: 1
+                }} />
+              )}
+            </button>
+          ))}
+        </nav>
+      </>
+    );
+  }
+
+  // Desktop sidebar
   return (
     <aside style={{
       position: 'fixed', left: 0, top: 0, bottom: 0,
@@ -68,14 +159,10 @@ export default function Sidebar({ activePage, setActivePage }) {
       </nav>
 
       {/* User */}
-      <div style={{
-        padding: '16px 10px',
-        borderTop: '1px solid var(--border)'
-      }}>
+      <div style={{ padding: '16px 10px', borderTop: '1px solid var(--border)' }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          padding: '10px 12px',
-          borderRadius: 10,
+          padding: '10px 12px', borderRadius: 10,
           background: 'var(--bg-card)'
         }}>
           <div style={{
@@ -93,16 +180,11 @@ export default function Sidebar({ activePage, setActivePage }) {
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{user?.currency}</div>
           </div>
-          <button
-            onClick={logout}
-            title="Logout"
-            style={{
-              background: 'none', border: 'none',
-              color: 'var(--text-muted)', cursor: 'pointer',
-              fontSize: 14, padding: '4px',
-              borderRadius: 5
-            }}
-          >→</button>
+          <button onClick={logout} title="Logout" style={{
+            background: 'none', border: 'none',
+            color: 'var(--text-muted)', cursor: 'pointer',
+            fontSize: 14, padding: '4px', borderRadius: 5
+          }}>→</button>
         </div>
       </div>
     </aside>
