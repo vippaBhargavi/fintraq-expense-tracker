@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD'];
+const isMobile = window.innerWidth <= 768;
 
 export default function AuthPage() {
   const [mode, setMode] = useState('login');
@@ -32,14 +33,18 @@ export default function AuthPage() {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex',
+      minHeight: '100vh',
+      display: 'flex',
       background: 'var(--bg-primary)'
     }}>
-      {/* Left panel */}
+      {/* Left panel - Login form */}
       <div style={{
-        flex: 1, display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        padding: '40px'
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: isMobile ? '24px 20px' : '40px'
       }}>
         <div style={{ width: '100%', maxWidth: 400 }}>
           {/* Logo */}
@@ -133,42 +138,46 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* Right panel - decorative */}
-      <div style={{
-        width: 460, background: 'var(--bg-secondary)',
-        borderLeft: '1px solid var(--border)',
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        padding: '40px',
-        '@media (max-width: 768px)': { display: 'none' }
-      }}>
-        <div style={{ textAlign: 'center', maxWidth: 320 }}>
-          <div style={{ fontSize: 64, marginBottom: 24 }}>📊</div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>
-            Take control of your finances
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 32 }}>
-            Track income and expenses, set budgets, and visualize where your money goes every month.
-          </p>
-          {['Track every transaction', 'Set category budgets', 'Visual spending charts', 'Monthly summaries'].map((f, i) => (
-            <div key={i} style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              marginBottom: 12, textAlign: 'left',
-              color: 'var(--text-secondary)', fontSize: 14
-            }}>
-              <div style={{
-                width: 20, height: 20,
-                background: 'var(--accent-glow)',
-                border: '1px solid var(--accent)',
-                borderRadius: '50%',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 10, color: 'var(--accent)', flexShrink: 0
-              }}>✓</div>
-              {f}
-            </div>
-          ))}
+      {/* Right panel - hidden on mobile */}
+      {!isMobile && (
+        <div style={{
+          width: 460,
+          background: 'var(--bg-secondary)',
+          borderLeft: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px'
+        }}>
+          <div style={{ textAlign: 'center', maxWidth: 320 }}>
+            <div style={{ fontSize: 64, marginBottom: 24 }}>📊</div>
+            <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>
+              Take control of your finances
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 32 }}>
+              Track income and expenses, set budgets, and visualize where your money goes every month.
+            </p>
+            {['Track every transaction', 'Set category budgets', 'Visual spending charts', 'Monthly summaries'].map((f, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                marginBottom: 12, textAlign: 'left',
+                color: 'var(--text-secondary)', fontSize: 14
+              }}>
+                <div style={{
+                  width: 20, height: 20,
+                  background: 'var(--accent-glow)',
+                  border: '1px solid var(--accent)',
+                  borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 10, color: 'var(--accent)', flexShrink: 0
+                }}>✓</div>
+                {f}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
